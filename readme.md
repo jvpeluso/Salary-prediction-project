@@ -40,8 +40,11 @@ We've merged both files for training tasks, then, during the data consistency ch
 
 At first sight, after computing the basic statistics of the dataset, we can make some initial conclusions:
 
-* The numerical features (*yearsExperience* and *milesFromMetropolis*) both have a mean exactly in the middle of their ranges and a high STD value, which indicates that they aren't normally distributed. No outliers are detected.
-* The target value *salary*, have a mean close to the 2nd quartile, and smaller, but still high STD. There are some high salaries, but salaries can be that high, considering the max value is 300, we consider those values are not outliers. You can see the box plot in the notebook. 
+* The numerical features (*yearsExperience* and *milesFromMetropolis*) both have a mean exactly in the middle of their ranges and a high STD value, which indicates that they aren't normally distributed. No outliers are detected, as we can see in the box plot.
+* The target value *salary*, have a mean close to the 2nd quartile, and smaller, but still high STD. There are some high salaries, but salaries can be that high, considering the max value is 300, we consider those values are not outliers.
+
+![](https://i.imgur.com/z3YrJF2.png)
+
 * The categorical features have the following values:
 
 
@@ -55,16 +58,21 @@ industry | HEALTH, WEB, AUTO, FINANCE, EDUCATION, OIL, SERVICE
 
 ## Feature distribution.
 
-* Numerical features (*yearsExperience* and *milesFromMetropolis*) are evenly distributed within their respective ranges.
+* Numerical features (*yearsExperience* and *milesFromMetropolis*) are evenly distributed within their respective ranges, the salary feature has a normal distribution, slightly left squewed.
+
+![](https://i.imgur.com/QtV0Lxs.png)
+
 * 2 of the categorical features (*jobType* and *industry*) have a perfect evenly distribution, as each category has the same percentage of records.
 * Feature *degree* splits into 2 groups, one with **NONE** and **HIGH_SCHOOL** with 47.4% of the records; 23.7% each, and the remaining 52.6% is evenly distributed among the 3 remaining categories.
 * Feature *major*  has a predominant category, **NONE**, with 53.2% of the records, the remaining 46.8% is evenly distributed among the remaining categories.
 
-You can see visually all distribution graphs in the notebook.
+![](https://i.imgur.com/49BaLhF.png)
 
 ## Correlations
 
-We can conclude that there is no correlation in the numerical features, not with the target value (-0.38 / 0.30) and not between them (0.00). You can see the *correlation matrix* graph in the notebook.
+We can conclude that there is no correlation in the numerical features, not with the target value (-0.38 / 0.30) and not between them (0.00).
+
+![](https://i.imgur.com/e56HYlG.png)
 
 ## 4. Exploratory data analysis
 
@@ -76,22 +84,26 @@ If we dig deep and calculate the mean salary per company and job position, the d
 
 As expected, the mean salary increases together with the years of experience of the employee, but interestingly, decreases the far the employee lives from the metropolis.
 
+![](https://i.imgur.com/jUpPHUs.png)
+
 When we grouped the salary means by the unique values of the categorical features, we got the following insights:
+
+![](https://i.imgur.com/OWyv28R.png)
 
 * **jobType:** As expected, the lowest value is for *JANITOR* and the highest for *CEO*. Overall, the values gradually increase according to the level of the job, but interestingly enough, *CTO* and *CFO* have the same value.
 * **degree:** The values are split into 2 groups, *NONE* and *HIGH_SCHOOL* in the lower range, and *BACHELORS*, *MASTERS*, and *DOCTORAL* at the top. The gap is significant between *HIGH_SCHOOL* and *BACHELORS*.
 * **major:** Having a major pays best than not having one; *NONE* has the lowest salary and is widely separated from the rest of the categories, the top major is *ENGINEERING*.
 * **industry:** Perhaps the feature that shows a more gradual rise between categories. *EDUCATION* pays the least, *FINANCE* and *OIL* the most, and both have essentially the same salary mean.
 
-As the position is a key feature, we've analyzed the average salary per *jobType* divided by the other 3 features. Interestingly, the differences remain stable in all cases, that is, they follow the same behavior when we divide them by *degree*, *industry* or *major*. They all descend in the same way, through the different job types, and only becoming pronounced when we reach *JANITOR*. 
+As the position is a key feature, we've analyzed the average salary per *jobType* divided by the other 3 features. Interestingly, the differences remain stable in all cases, that is, they follow the same behavior when we divide them by *degree*, *industry* or *major*. They all descend in the same way, through the different job types, and only becoming pronounced when we reach *JANITOR*. Here you can see the bar plot of the salary average for *degree* feature, where the trend is easily perceived. Other plots can be seen in the notebook.
 
-All the features analysis can be seen graphically in the notebook.
+![](https://i.imgur.com/pV4yp3B.png)
 
 ## 5. Data pre-processing
 
 ### Feature engeenering
 
-To enhance the performance of the models, 9 new features were created:
+To enhance the performance of the models, 6 new features were created:
 
 * **hasMajor:** As the distribution of this feature is 53% of NONE value, and the rest is equally distributed among the remaining values, a dummy fueature was created.
 - **compID:** To be able to use the company ID in the machine learning algorithm, a new column was created with only the numerical code of the companies.
@@ -113,6 +125,8 @@ To most machine learning algorithms, the more uniform the data is, the better th
 ### PCA (Principal component analysis)
 
 We've analyzed the train dataset, to see if we could reduce its dimensionality. Applying PCA, we've concluded that there's no gain creating a new PCA dataset. You can see the graph in the notebook, to capture the *95%* we need more than **26 features**.
+
+![](https://i.imgur.com/yRS5N5e.png)
 
 ## 6. Model development
 
@@ -140,14 +154,7 @@ XGBoost regressor | 339.3565 | 18.4216
 
 The lowest *MSE* error was returned by the _**XGBoost regressor**_, although the score of the *Random forest regressor* was very close. Once the best model was fitted with the train data, the feature importance generated by the model are:
 
-* **jobIndDegMajYex_mean:** _84.73%_
-* **milesFromMetropolis:** _8.11%_
-* **jobIndDegMajYex_max:** _1.94%_
-* **jobIndDegMajYex_std:** _1.58%_
-* **jobIndDegMajYex_min:** _1.50%_
-* **yearsExperience:** _0.77%_
-* **jobType_JANITOR:** _0.71%_
-* **All other features:** _0.66%_
+![](https://i.imgur.com/qzkiDA8.png)
 
 Then, the prediction for the unseen jobs position was made and exported into a CSV file.
 
