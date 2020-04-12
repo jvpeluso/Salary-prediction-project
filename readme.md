@@ -34,7 +34,7 @@ Once defined the classes, the data files of the job description and correspondin
 
 We've merged both files for training tasks, then, during the data consistency checks, we've found no NaN or duplicated rows, but 5 rows had a **salary 0** (zero). Those rows were deleted
 
-## 3. General statistics
+## 3. Descriptive statistics
 
 ### General overview
 
@@ -45,7 +45,7 @@ At first sight, after computing the basic statistics of the dataset, we can make
 
 ![](https://i.imgur.com/z3YrJF2.png)
 
-* The categorical features have the following values:
+* The categorical features have the following unique values:
 
 
 Feature | Unique values | 
@@ -144,7 +144,7 @@ For this regression task, 3 different machine learning algorithms were selected,
 * **Random forest regressor.**
 * **XGboost regressor.**
 
-After being carefully tunned, we've tested each of them with *cross_val_score*, having the following results:
+After being carefully tuned, we've tested each of them with *cross_val_score*, having the following results:
 
 Classifier | MSE | RMSE 
 --- | --- | --- 
