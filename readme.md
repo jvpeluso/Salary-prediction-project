@@ -143,7 +143,7 @@ After being carefully tuned we've created a *pipeline*, to standardize the value
 
 Model | RMSE | Time
 --- | --- | --- 
-Linear regressor | 18.8844 | 14 seconds
+Linear Regression | 18.8844 | 14 seconds
 Random forest regressor | 18.3325 | 57 minutes 44 seconds
 XGBoost regressor | 18.2978 | 7 minutes 44 seconds
 
@@ -157,8 +157,8 @@ Now, to finally test the models, we check the performance with the **validation*
 
 Model | RMSE | Time
 --- | --- | --- 
-Linear regressor | 19.82200 | 2 seconds
-Random forest regressor | 19.7116 | 19 minutes 44 seconds
+Linear Regression | 19.8220 | 2 seconds
+Random forest regressor | 19.7116 | 19 minutes 54 seconds
 XGBoost regressor | 19.5923 | 2 minutes 44 seconds
 
 We also display the feature importances, which confirms that the features engineered are key in the predictive process and that the dataset itself seems not good enough to do this task, as the results are not that exciting.
