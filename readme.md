@@ -101,34 +101,29 @@ As the position is a key feature, we've analyzed the average salary per *jobType
 
 ![](https://i.imgur.com/pV4yp3B.png)
 
-## 5. Data pre-processing
+## 5. Data split and features engineering
 
-### Feature engeenering
+We divide the train data into _80%_ train and _20%_ validation, then we apply to all 3 datasets (train, validation and test) the creation, encoding and transformation processes to prepare the data for the predictive models we will develop. The processes are the following:
 
-To enhance the performance of the models, 6 new features were created:
+**_New features_**
 
-* **hasMajor:** As the distribution of this feature is 53% of NONE value, and the rest is equally distributed among the remaining values, a dummy fueature was created.
-- **compID:** To be able to use the company ID in the machine learning algorithm, a new column was created with only the numerical code of the companies.
-- **jobIndDegMajYex:** The mean salary values per _**job**Type_, _**ind**ustry_, _**deg**ree_, _**maj**or_ and _**y**ears**Ex**perience_ categories. 4 features based on that grouping were created:
+To enhance the performance of the models, 5 new features were created:
 
-    1) *jobIndDegMajYex_mean:* Salary mean of the group.
-    2) *jobIndDegMajYex_std:* Salary STD of the group.
-    3) *jobIndDegMajYex_min:* Min value of the Salary mean in the group.
-    4) *jobIndDegMajYex_max:* Max value of the Salary mean in the group.
+- **hasMajor:** As the distribution of this feature is 53% of NONE value, and the rest is equally distributed among the remaining values, a dummy fueature was created.
+- **mean_SalaryGroup :** The mean salary values per _**jobType**_, _**industry**_, _**degree**_, _**major**_ and _**yearsExperience**_ categories. 
+- **std_SalaryGroup :** The STD salary values per _**jobType**_, _**industry**_, _**degree**_, _**major**_ and _**yearsExperience**_ categories. 
+- **min_SalaryGroup :** The minimum salary values per _**jobType**_, _**industry**_, _**degree**_, _**major**_ and _**yearsExperience**_ categories.
+- **max_SalaryGroup :** The maximum salary values per _**jobType**_, _**industry**_, _**degree**_, _**major**_ and _**yearsExperience**_ categories.
 
-### Categorical features
+Note, that the process calculates the values of the group features on the train data, and then map it into the validation data, to avoid *data leakage*.
 
-We've deleted the column *companyId*, and by applying the Pandas function _**get_dummies**_, we've converted the categorical features into numerical dummy variables.
+**_Categorical features encoding_**
 
-### Data normalization
+The 4 categorical features were encoded in order based on average salaries per for each of the value in each feature. Note, that here too the process calculates the values of the group features on the train data, and then map it into the validation data, to avoid *data leakage*.
 
-To most machine learning algorithms, the more uniform the data is, the better the results are. In this case, as we have different value ranges across the different features of the dataset, we've normalized the data with the _**Z Normalisation**_ technique.
+**_Features update_**
 
-### PCA (Principal component analysis)
-
-We've analyzed the train dataset, to see if we could reduce its dimensionality. Applying PCA, we've concluded that there's no gain creating a new PCA dataset. You can see the graph in the notebook, to capture the *95%* we need more than **26 features**.
-
-![](https://i.imgur.com/yRS5N5e.png)
+To be able to use the *companyID* feature in the machine learning algorithm, a we update it, filtering only the the numerical code of the companies.
 
 ## 6. Model development
 
