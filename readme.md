@@ -2,9 +2,17 @@
 
 ## 1. Introduction
 
+### Problem description
+
+As we know, the job market is very complex and competitive. For those who want to be hired, and for the companies which want to have the best talent at their service. Knowing in advance, how much are you going to get paid, or will pay for a certain job or profile, could be helpful for both the employee and the employer.
+
+**_Having data of the roles and employee details, ¿Can we develop a model that predicts the salary for a specific job and profile? How accurate can we get? Are the features enough for a good predictive model?_**
+
+We will work to develop a machine learning model, that will try to predict the salaries accurately as possible, with the data at our disposal.
+
 ### The dataset, features and target value
 
-The data is split into 2 CSV files to train the model, one with the features and one with the target variable. Other CSV file has the jobs for which we need to predict the salaries. The features are the descriptions of the jobs of a group of companies, being the columns the following:
+This dataset contains data on different work positions within a group of 100 companies with their respective salaries (expressed in thousands of dollars). The information is divided into 3 CSV files, the first one with the information of the work positions and employee details (features), and contains 1.000.000 records. The columns are the following:
 
 * **jobId:** The ID of the job.
 * **companyId:** The ID of the company.
@@ -15,24 +23,16 @@ The data is split into 2 CSV files to train the model, one with the features and
 * **yearsExperience:** The employee years of experience on the job.
 * **milesFromMetropolis:** The distance in miles, the employee lives away from his/her place of work.
 
-The target variable is the salary each employee receives, being the columns the following:
+The second file includes the corresponding salary (target feature) for each of the work positions in the previous file, information of both files will be used as the _Training and validation set_. The file also contains 1.000.000 records and includes the following columns:
 
 * **jobId:** The ID of the job.
 * **salary:** Salary amount paid for that job.
 
-### Problem description
-
-As we know, the job market is very complex and competitive. For those who want to be hired, and for the companies which want to have the best talent at their service. Knowing in advance, how much are you going to get paid, or will pay for a certain job or profile, could be helpful for both the employee and the employer.
-
-**_With the data available, can we develop a model that predicts the salary for a specific job and profile? How accurate can we get? Are the features enough for a good predictive model?_**
-
-We will work to develop a machine learning model, that will try to predict the salaries accurately as possible, for each job we have at our disposal.
+The last file, contains information about other positions, and have the same structure than the first file. On this data we will use the algorithm to predict what should be the salary for each job.
 
 ## 2. Data quality check
 
-Once defined the classes, the data files of the job description and corresponding salaries were uploaded into Pandas dataframes, each file has 1.000.000 records each.
-
-We've merged both files for training tasks, then, during the data consistency checks, we've found no NaN or duplicated rows, but 5 rows had a **salary 0** (zero). Those rows were deleted
+The data files of the job description and corresponding salaries were uploaded into Pandas dataframes, being merged to be able to analize the data. But first, we've ran the consistency checks, finding no NaN or duplicated rows, but 5 rows had a **salary 0** (zero), which we've deleted in the process. Also, we loaded and checked the file with the data on which we will apply the predictive model. 
 
 ## 3. Descriptive statistics
 
@@ -40,8 +40,9 @@ We've merged both files for training tasks, then, during the data consistency ch
 
 At first sight, after computing the basic statistics of the dataset, we can make some initial conclusions:
 
-* The numerical features (*yearsExperience* and *milesFromMetropolis*) both have a mean exactly in the middle of their ranges and a high STD value, which indicates that they aren't normally distributed. No outliers are detected, as we can see in the box plot.
-* The target value *salary*, have a mean close to the 2nd quartile, and smaller, but still high STD. There are some high salaries, but salaries can be that high, considering the max value is 300, we consider those values are not outliers.
+* The numerical features (*yearsExperience* and *milesFromMetropolis*) both have a mean exactly in the middle of their ranges and a high STD value, which indicates that they aren't normally distributed, meaning, the predictive power will be low. 
+
+* The target value *salary*, have a mean close to the 2nd quartile, and smaller, but still high STD. There are some high salaries, but salaries are volatile, considering the max value is 300, we consider those values are not so extreme to be considered outliers. We can see the distribution in the following box plot.
 
 ![](https://i.imgur.com/z3YrJF2.png)
 
@@ -64,13 +65,13 @@ industry | HEALTH, WEB, AUTO, FINANCE, EDUCATION, OIL, SERVICE
 
 * 2 of the categorical features (*jobType* and *industry*) have a perfect evenly distribution, as each category has the same percentage of records.
 * Feature *degree* splits into 2 groups, one with **NONE** and **HIGH_SCHOOL** with 47.4% of the records; 23.7% each, and the remaining 52.6% is evenly distributed among the 3 remaining categories.
-* Feature *major*  has a predominant category, **NONE**, with 53.2% of the records, the remaining 46.8% is evenly distributed among the remaining categories.
+* Feature *major* has a predominant category, **NONE**, with 53.2% of the records, the remaining 46.8% is evenly distributed among the remaining categories.
 
 ![](https://i.imgur.com/49BaLhF.png)
 
 ## Correlations
 
-We can conclude that there is no correlation in the numerical features, not with the target value (-0.38 / 0.30) and not between them (0.00).
+We can conclude that there is no strong correlation in the numerical features, not with the target value (-0.38 / 0.30) and not between them (0.00).
 
 ![](https://i.imgur.com/e56HYlG.png)
 
@@ -80,7 +81,7 @@ We can conclude that there is no correlation in the numerical features, not with
 
 The global mean salary is **_116.06_**; if we calculate the mean per company, we see the range doesn't differ that much, as the max mean is **_116.79_** and the min mean is **_115.34_**, with an inner range of only **_1.45_**. 
 
-If we dig deep and calculate the mean salary per company and job position, the differences are minimal, the highest inner range is for position *CEO*(**_4.38_**) and the mean of the ranges is **_3.23_**. These calculations indicate, that the average salary per company won't help with the prediction task.
+If we dig deep and calculate the mean salary per company and job position, the differences are minimal, the highest inner range is for the position of *CEO*(**_4.38_**) and the mean of the ranges is **_3.23_**. These calculations indicate, that the average salary per company won't help with the prediction task.
 
 As expected, the mean salary increases together with the years of experience of the employee, but interestingly, decreases the far the employee lives from the metropolis.
 
@@ -88,12 +89,13 @@ As expected, the mean salary increases together with the years of experience of 
 
 When we grouped the salary means by the unique values of the categorical features, we got the following insights:
 
-![](https://i.imgur.com/OWyv28R.png)
+![](https://i.imgur.com/kaqbwz8.png)
 
 * **jobType:** As expected, the lowest value is for *JANITOR* and the highest for *CEO*. Overall, the values gradually increase according to the level of the job, but interestingly enough, *CTO* and *CFO* have the same value.
-* **degree:** The values are split into 2 groups, *NONE* and *HIGH_SCHOOL* in the lower range, and *BACHELORS*, *MASTERS*, and *DOCTORAL* at the top. The gap is significant between *HIGH_SCHOOL* and *BACHELORS*.
-* **major:** Having a major pays best than not having one; *NONE* has the lowest salary and is widely separated from the rest of the categories, the top major is *ENGINEERING*.
 * **industry:** Perhaps the feature that shows a more gradual rise between categories. *EDUCATION* pays the least, *FINANCE* and *OIL* the most, and both have essentially the same salary mean.
+* **major:** Having a major pays best than not having one; *NONE* has the lowest salary and is widely separated from the rest of the categories, the top major is *ENGINEERING*.
+* **degree:** The values are split into 2 groups, *NONE* and *HIGH_SCHOOL* in the lower range, and *BACHELORS*, *MASTERS*, and *DOCTORAL* at the top. The gap is significant between *HIGH_SCHOOL* and *BACHELORS*.
+
 
 As the position is a key feature, we've analyzed the average salary per *jobType* divided by the other 3 features. Interestingly, the differences remain stable in all cases, that is, they follow the same behavior when we divide them by *degree*, *industry* or *major*. They all descend in the same way, through the different job types, and only becoming pronounced when we reach *JANITOR*. Here you can see the bar plot of the salary average for *degree* feature, where the trend is easily perceived. Other plots can be seen in the notebook.
 
