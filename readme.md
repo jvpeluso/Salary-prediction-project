@@ -8,7 +8,7 @@ As we know, the job market is very complex and competitive. For those who want t
 
 **_Having data of the roles and employee details, ¿Can we develop a model that predicts the salary for a specific job and profile? How accurate can we get? Are the features enough for a good predictive model?_**
 
-We will work to develop a machine learning model, that will try to predict the salaries accurately as possible, with the data at our disposal. We will use **_Root Mesn Squared Error (RMSE)_** as the metric to validate the effectiveness of our model.
+We will work to develop a machine learning model, that will try to predict the salaries accurately as possible, with the data at our disposal. We will use the **_Root Mean Squared Error (RMSE)_** as the metric to validate the effectiveness of our model.
 
 ### The dataset, features and target value
 
@@ -28,11 +28,11 @@ The second file includes the corresponding salary (target feature) for each of t
 * **jobId:** The ID of the job.
 * **salary:** Salary amount paid for that job.
 
-The last file, contains information about other positions, and have the same structure than the first file. On this data we will use the algorithm to predict what should be the salary for each job.
+The last file contains information about other positions, and have the same structure than the first file. On this data, we will use the algorithm to predict what should be the salary for each job.
 
 ## 2. Data quality check
 
-The data files of the job description and corresponding salaries were uploaded into Pandas dataframes, being merged to be able to analize the data. But first, we've ran the consistency checks, finding no NaN or duplicated rows, but 5 rows had a **salary 0** (zero), which we've deleted in the process. Also, we loaded and checked the file with the data on which we will apply the predictive model. 
+The data files of the job description and corresponding salaries were uploaded into Pandas dataframes, being merged to be able to analyze the data. But first, we've run the consistency checks, finding no NaN or duplicated rows, but 5 rows had a **salary 0** (zero), which we've deleted in the process. Also, we loaded and checked the file with the data on which we will apply the predictive model. 
 
 ## 3. Descriptive statistics
 
@@ -59,7 +59,7 @@ industry | HEALTH, WEB, AUTO, FINANCE, EDUCATION, OIL, SERVICE
 
 ## Feature distribution.
 
-* Numerical features (*yearsExperience* and *milesFromMetropolis*) are evenly distributed within their respective ranges, the salary feature has a normal distribution, slightly left squewed.
+* Numerical features (*yearsExperience* and *milesFromMetropolis*) are evenly distributed within their respective ranges, the salary feature has a normal distribution, slightly left-skewed.
 
 ![](https://i.imgur.com/QtV0Lxs.png)
 
@@ -97,7 +97,7 @@ When we grouped the salary means by the unique values of the categorical feature
 * **degree:** The values are split into 2 groups, *NONE* and *HIGH_SCHOOL* in the lower range, and *BACHELORS*, *MASTERS*, and *DOCTORAL* at the top. The gap is significant between *HIGH_SCHOOL* and *BACHELORS*.
 
 
-As the position is a key feature, we've analyzed the average salary per *jobType* divided by the other 3 features. Interestingly, the differences remain stable in all cases, that is, they follow the same behavior when we divide them by *degree*, *industry* or *major*. They all descend in the same way, through the different job types, and only becoming pronounced when we reach *JANITOR*. Here you can see the bar plot of the salary average for *degree* feature, where the trend is easily perceived. Other plots can be seen in the notebook.
+As the position is a key feature, we've analyzed the average salary per *jobType* divided by the other 3 features. Interestingly, the differences remain stable in all cases, that is, they follow the same behaviour when we divide them by *degree*, *industry* or *major*. They all descend in the same way, through the different job types, and only becoming pronounced when we reach *JANITOR*. Here you can see the bar plot of the salary average for *degree* feature, where the trend is easily perceived. Other plots can be seen in the notebook.
 
 ![](https://i.imgur.com/pV4yp3B.png)
 
@@ -109,7 +109,7 @@ We divide the train data into _80%_ train and _20%_ validation, then we apply to
 
 To enhance the performance of the models, 5 new features were created:
 
-- **hasMajor:** As the distribution of this feature is 53% of NONE value, and the rest is equally distributed among the remaining values, a dummy fueature was created.
+- **hasMajor:** As the distribution of this feature is 53% of NONE value, and the rest is equally distributed among the remaining values, a dummy feature was created.
 - **mean_SalaryGroup :** The mean salary values per _**jobType**_, _**industry**_, _**degree**_, _**major**_ and _**yearsExperience**_ categories. 
 - **std_SalaryGroup :** The STD salary values per _**jobType**_, _**industry**_, _**degree**_, _**major**_ and _**yearsExperience**_ categories. 
 - **min_SalaryGroup :** The minimum salary values per _**jobType**_, _**industry**_, _**degree**_, _**major**_ and _**yearsExperience**_ categories.
@@ -123,7 +123,7 @@ The 4 categorical features were encoded in order based on average salaries per f
 
 **_Features update_**
 
-To be able to use the *companyID* feature in the machine learning algorithm, a we update it, filtering only the the numerical code of the companies.
+To be able to use the *companyID* feature in the machine learning algorithm we update it, filtering only the numerical code of the companies.
 
 ## 6. Model development
 
@@ -139,7 +139,7 @@ For this regression task, 3 different machine learning algorithms were selected,
 * **Random forest regressor.**
 * **XGboost regressor.**
 
-After being carefully tuned we've created a *pipeline*, to standardize the features values and tested each of them with *cross_val_score* using the **train** datasets, the results were the following:
+After being carefully tuned we've created a *pipeline*, to standardize the values of the features and tested each of them with *cross_val_score* using the **train** datasets, the results were the following:
 
 Model | RMSE | Time
 --- | --- | --- 
@@ -161,7 +161,7 @@ Linear regressor | 19.82200 | 2 seconds
 Random forest regressor | 19.7116 | 19 minutes 44 seconds
 XGBoost regressor | 19.5923 | 2 minutes 44 seconds
 
-We also display the feature importances, which confirms that the features engineered are key in the predictive process, and that the dataset itself seems not good enough to do this task, as the results are not that exciting.
+We also display the feature importances, which confirms that the features engineered are key in the predictive process and that the dataset itself seems not good enough to do this task, as the results are not that exciting.
 
 ![](https://i.imgur.com/Mkz3AE6.png)
 
@@ -175,4 +175,4 @@ We've built a decent model, that can predict the salary value for a position wit
 
 On the other hand, we can confirm the *feature engineering* process is crucial, the model bases almost entirely on the feature created. Also is worth to keep in mind to be careful to avoid the data leakage when building features based on the target feature.
 
-Finally, even if the lower *RMSE* was obtained by the **_XGBoost regressor_** model, we must also take into account the execution time, so although the highest error was obtained by the *Linear regression* model, the training process is really fast, so depending on the planned use (as an API as example) the difference in performance can be compensated by the speed of execution.
+Finally, even if the lower *RMSE* was obtained by the **_XGBoost regressor_** model, we must also take into account the execution time, so although the highest error was obtained by the *Linear regression* model, the training process is really fast, so depending on the planned use (an API as an example) the difference in performance can be compensated by the speed of execution.
